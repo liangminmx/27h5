@@ -1,7 +1,4 @@
-# Game files (too large for Git, included in Docker image)
-game/
-
-# Keep docker-compose and config but ignore built artifacts
+# Game files tracked by Git LFS
 *.zip
 *.tar
 *.tar.gz
