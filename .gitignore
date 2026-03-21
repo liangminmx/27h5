@@ -1,0 +1,18 @@
+# Game files (too large for Git, included in Docker image)
+game/
+
+# Keep docker-compose and config but ignore built artifacts
+*.zip
+*.tar
+*.tar.gz
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

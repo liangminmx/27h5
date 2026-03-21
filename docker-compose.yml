@@ -1,0 +1,13 @@
+services:
+  h5game:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: h5game
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./game:/var/www/html
+    environment:
+      - TZ=Asia/Shanghai
