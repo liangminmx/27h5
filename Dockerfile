@@ -25,7 +25,8 @@ COPY supervisord.conf /etc/supervisord.conf
 RUN chmod 644 /etc/nginx/http.d/*.conf
 
 COPY game /var/www/html/game
-RUN chown -R nginx:nginx /var/www/html \
+RUN chmod -R 755 /var/www/html/game \
+    && chown -R nginx:nginx /var/www/html \
     && sed -i 's/^user = .*/user = nginx/' /etc/php82/php-fpm.d/www.conf \
     && sed -i 's/^group = .*/group = nginx/' /etc/php82/php-fpm.d/www.conf \
     && sed -i 's/^listen.owner = .*/listen.owner = nginx/' /etc/php82/php-fpm.d/www.conf \
