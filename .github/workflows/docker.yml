@@ -40,6 +40,6 @@ jobs:
           push: true
           tags: |
             ghcr.io/liangminmx/h5-27:latest
-            liangminmx/h5-27:latest
+            jzbdc/h5-27:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
