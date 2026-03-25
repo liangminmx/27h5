@@ -32,6 +32,6 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/liangminmx/27h5:latest
+          tags: ghcr.io/liangminmx/h5-27:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
