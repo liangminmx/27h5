@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+    <!-- 禁用缓存：确保每次进入页面都会刷新界面缓存 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>小游戏库</title>
+    <meta name="description" content="小游戏库">
+    <style>
+      :root {
+        --bg-0: #0a0d14;
+        --bg-1: #0f1320;
+        --neon-1: #00e0ff;
+        --neon-2: #ff00aa;
+        --neon-3: #87ff65;
+        --text: #e8f0ff;
+        --muted: #8aa0c6;
+        --nav-h: 66px; /* 底部导航栏高度 */
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        color: var(--text);
+        background: radial-gradient(1200px 800px at 10% 10%, #101629 0%, var(--bg-0) 40%, var(--bg-1) 100%);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+        overflow-x: hidden;
+        padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom)); /* 为底部导航栏与安全区预留空间 */
+      }
+
+      /* 动态星空背景 */
+      .stars {
+        position: fixed; inset: 0; pointer-events: none; z-index: 0;
+        background-image:
+          radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.25) 0, transparent 50%),
+          radial-gradient(1.5px 1.5px at 70% 80%, rgba(255,255,255,.12) 0, transparent 50%),
+          radial-gradient(1.8px 1.8px at 40% 60%, rgba(255,255,255,.18) 0, transparent 50%),
+          radial-gradient(2px 2px at 85% 25%, rgba(255,255,255,.2) 0, transparent 50);
+        animation: twinkle 8s linear infinite;
+      }
+      @keyframes twinkle {
+        0% { transform: translateY(0); opacity: .9; }
+        50% { transform: translateY(-10px); opacity: .7; }
+        100% { transform: translateY(0); opacity: .9; }
+      }
+
+      header {
+        position: relative; z-index: 2;
+        padding: 32px 20px 12px;
+        text-align: center;
+      }
+      .title {
+        margin: 0;
+        font-size: clamp(24px, 5vw, 48px);
+        letter-spacing: .03em;
+        text-shadow: 0 0 10px rgba(0,224,255,.25), 0 0 25px rgba(255,0,170,.2);
+      }
+      .subtitle {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: clamp(12px, 2.2vw, 16px);
+      }
+
+      .grid {
+        position: relative; z-index: 2;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto 32px;
+      }
+
+      .card {
+        --glow: rgba(0,224,255,.55);
+        --glow-2: rgba(255,0,170,.45);
+        position: relative;
+        display: flex; flex-direction: column;
+        border-radius: 16px; color: var(--text);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0) 60%),
+          radial-gradient(120% 100% at 0% 0%, rgba(0,224,255,.08), transparent 60%),
+          radial-gradient(120% 100% at 100% 100%, rgba(255,0,170,.08), transparent 60%),
+          linear-gradient(180deg, #0f1526, #0a0f1d);
+        border: 1px solid rgba(255,255,255,.08);
+        box-shadow: 0 8px 24px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.04);
+        overflow: hidden;
+        transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      }
+      .card::before {
+        content: "";
+        position: absolute; inset: -1px; border-radius: 16px;
+        padding: 1px; /* neon 边框 */
+        background: linear-gradient(135deg, var(--neon-1), transparent 30%),
+                    linear-gradient(315deg, var(--neon-2), transparent 30%),
+                    linear-gradient(90deg, transparent, rgba(255,255,255,.06));
+        -webkit-mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+        mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+        -webkit-mask-composite: xor; mask-composite: exclude;
+        pointer-events: none;
+        opacity: .35; transition: opacity .25s ease;
+      }
+      .card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255,255,255,.15);
+        box-shadow: 0 16px 36px rgba(0,0,0,.5), 0 0 24px var(--glow-2);
+      }
+      .card:hover::before { opacity: .65; }
+
+      /* 上半部分：预览截图区域 */
+      .card-preview {
+        position: relative;
+        height: 50%; min-height: 140px;
+        /* 默认显示渐变占位，具体卡片用 moren01~moren05 覆盖 */
+        background-image: linear-gradient(135deg, rgba(0,224,255,.12), rgba(255,0,170,.12));
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+      
+      .hot-tag {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: linear-gradient(135deg, #ff4d4f, #ff7a45);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 10;
+    transform: rotate(-5deg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .new-tag {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: linear-gradient(135deg, #2ed573, #1e90ff);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 10;
+    transform: rotate(-5deg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+      
+      /* 新增new标签样式 */
+      .new-tag {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: linear-gradient(135deg, #2ed573, #1e90ff);
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        z-index: 10;
+        transform: rotate(-5deg);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .card-preview::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,.3) 60%, rgba(0,0,0,0) 100%);
+        pointer-events: none;
+      }
+      .badge {
+        width: 44px; height: 44px; flex: none;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800; letter-spacing: .02em; color: #051018;
+        font-size: clamp(14px, 2.6vw, 18px);
+        background: linear-gradient(135deg, #6bdcff, #f8a6ff); /* 默认背景，在具体卡片中会被覆盖 */
+        filter: saturate(120%) brightness(110%);
+        box-shadow: inset 0 0 24px rgba(255,255,255,.25), 0 4px 12px rgba(0,0,0,.35);
+      }
+      .badge-01 { background: linear-gradient(135deg, #00e0ff, #7a00ff); }
+      .badge-02 { background: linear-gradient(135deg, #ff8a00, #ff0040); }
+      .badge-03 { background: linear-gradient(135deg, #8dff1a, #00c897); }
+      .badge-04 { background: linear-gradient(135deg, #ffd400, #ff2aa1); }
+      .badge-05 { background: linear-gradient(135deg, #2a7cff, #ff4fb3); }
+      .name {
+        font-size: 18px; font-weight: 700; letter-spacing: .02em;
+        text-shadow: 0 0 8px rgba(0,224,255,.2);
+      }
+      .hint { color: var(--muted); font-size: 12px; }
+
+      /* 下半部分：信息与按钮区域 */
+      .card-info {
+        display: flex; align-items: center; justify-content: space-between; gap: 8px;
+        padding: 14px 18px;
+      }
+      .play-btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 10px 14px; border-radius: 12px;
+        color: #ffffff; font-weight: 700; letter-spacing: .02em;
+        background: linear-gradient(135deg, var(--neon-1), var(--neon-2));
+        box-shadow: 0 8px 20px rgba(0,224,255,.3), 0 6px 18px rgba(255,0,170,.25);
+        transition: transform .15s ease, box-shadow .2s ease;
+        text-decoration: none; /* 去掉文字下划线 */
+      }
+      .play-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,224,255,.35), 0 10px 24px rgba(255,0,170,.3); text-decoration: none; }
+
+      /* 已移除入口路径展示，不再需要 .device 样式 */
+
+      footer {
+        position: relative; z-index: 2; text-align: center; color: var(--muted); padding: 10px 20px 24px;
+      }
+
+      /* 响应式微调 */
+      @media (max-width: 480px) {
+        .badge { width: 38px; height: 38px; }
+        .name { font-size: 16px; }
+        .card-info { padding: 12px 14px; }
+      }
+
+      /* 预览图说明：卡片预览背景由数据中的 preview 字段提供，若缺失将使用默认渐变兜底 */
+
+      /* 视图切换：首页与聊天室 */
+      .view { display: none; }
+      .view.active { display: block; }
+
+      /* 进入游戏时，隐藏顶部 header，最大化游戏区域 */
+      body.game-active header { display: none; }
+
+      /* 底部常驻导航栏 */
+      .bottom-nav {
+        position: fixed; left: 0; right: 0; bottom: 0;
+        display: flex; align-items: center; justify-content: space-around; gap: 10px; flex-wrap: nowrap;
+        background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0) 35%), #0a0f1d;
+        border-top: 1px solid rgba(255,255,255,.12);
+        box-shadow: 0 -8px 24px rgba(0,0,0,.4);
+        z-index: 10;
+        backdrop-filter: blur(10px);
+        height: calc(var(--nav-h) + env(safe-area-inset-bottom));
+        padding: 8px 12px;
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      .nav-item {
+        flex: 1; max-width: 240px; height: 44px;
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        border-radius: 14px; cursor: pointer; user-select: none;
+        color: var(--text); font-weight: 700;
+        background: linear-gradient(135deg, rgba(0,224,255,.08), rgba(255,0,170,.08));
+        border: 1px solid rgba(255,255,255,.12);
+        transition: transform .15s ease, box-shadow .2s ease, background .2s ease, opacity .2s ease;
+      }
+      .nav-item:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,.35); }
+      .nav-item:active { transform: translateY(0); box-shadow: 0 6px 16px rgba(0,0,0,.3); }
+      .nav-item.active { background: linear-gradient(135deg, var(--neon-1), var(--neon-2)); color: #fff; box-shadow: 0 12px 26px rgba(0,224,255,.3), 0 10px 24px rgba(255,0,170,.25); border-color: transparent; }
+
+      /* 聊天室样式（移动端适配：使用 flex 填满视口高度） */
+      .chat-wrap { position: relative; z-index: 2; padding: 16px; max-width: 1000px; margin: 0 auto; min-height: calc(var(--vvh, 100dvh) - var(--nav-h) - 24px); display: flex; }
+      .chat-card {
+        border-radius: 16px; background: linear-gradient(180deg, #0f1526, #0a0f1d);
+        border: 1px solid rgba(255,255,255,.08);
+        box-shadow: 0 8px 24px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.04);
+        overflow: hidden;
+        display: flex; flex-direction: column; flex: 1 1 auto; min-height: inherit;
+      }
+      .chat-header { padding: 14px 16px; font-weight: 700; letter-spacing: .02em; background: linear-gradient(135deg, rgba(0,224,255,.12), rgba(255,0,170,.12)); border-bottom: 1px solid rgba(255,255,255,.08); }
+      .messages { flex: 1 1 auto; min-height: 220px; overflow: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+      .msg { padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
+      .msg .meta { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+      .msg .content { font-size: 14px; white-space: pre-wrap; word-break: break-word; }
+      .chat-input { display: grid; grid-template-columns: 160px 1fr auto; gap: 10px; padding: 12px 16px; border-top: 1px solid rgba(255,255,255,.08); flex: none; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+      .chat-input input { height: 44px; border-radius: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); color: var(--text); padding: 8px 10px; font-size: 16px; }
+      .chat-input button { height: 44px; border-radius: 10px; border: 0; padding: 0 16px; font-weight: 700; color: #fff; background: linear-gradient(135deg, var(--neon-1), var(--neon-2)); box-shadow: 0 8px 20px rgba(0,224,255,.3), 0 6px 18px rgba(255,0,170,.25); cursor: pointer; touch-action: manipulation; }
+      .chat-hint { padding: 8px 16px 16px; color: var(--muted); font-size: 12px; }
+      #game-view #game-container { display:flex; justify-content:center; }
+      #game-view #game-frame { max-width: 420px; }
+
+      @media (max-width: 600px) {
+        .chat-input { grid-template-columns: 120px 1fr auto; }
+      }
+      /* 窄屏进一步优化：昵称单独一行，减少横向占用 */
+      @media (max-width: 440px) {
+        .chat-input { grid-template-columns: 1fr auto; grid-template-rows: auto auto; }
+        #chat-username { grid-column: 1 / span 2; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stars" aria-hidden="true"></div>
+    <header>
+      <h1 class="title">小游戏库</h1>
+      <p class="subtitle">在线网页游戏，点击进入即可开始冒险</p>
+    </header>
+    <div id="pull-refresh" class="pull-refresh"><div class="pr-icon"></div><div class="pr-label">下拉刷新</div></div>
+
+    <main>
+      <!-- 首页：游戏大厅（动态渲染） -->
+      <section id="home-view" class="view active">
+        <div id="category-bar" class="category-bar" aria-label="分类筛选"></div>
+        <div id="game-grid" class="grid" aria-live="polite" aria-busy="false"></div>
+      </section>
+
+      <section id="history-view" class="view">
+        <div class="history-actions"><button id="history-clear-btn" class="text-btn">清除历史</button></div>
+        <div id="history-grid" class="grid" aria-live="polite" aria-busy="false"></div>
+      </section>
+
+      <!-- 聊天室 -->
+      <section id="chat-view" class="view">
+        <div class="chat-wrap">
+          <div class="chat-card">
+            <div class="chat-header">聊天室（简易）</div>
+            <div id="chat-messages" class="messages" aria-live="polite" aria-busy="false"></div>
+            <div class="chat-input">
+              <input id="chat-username" type="text" placeholder="昵称（最多32字）">
+              <input id="chat-content" type="text" placeholder="输入消息，按回车或点击发送">
+              <button id="chat-send">发送</button>
+            </div>
+            <div class="chat-hint">提示：消息将保存在服务器简易数据库中。请文明发言。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 游戏视图（使用 iframe 保持底部导航栏常驻） -->
+      <section id="game-view" class="view">
+        <div class="chat-wrap" style="padding:0; max-width: none;">
+          <div class="chat-card" style="border:none; box-shadow:none; border-radius:0;">
+            <div id="game-container" style="position:relative;">
+              <iframe id="game-frame" title="游戏" src="" frameborder="0" allow="fullscreen" allowfullscreen="" style="display:block; width:100%; height:calc(var(--vvh, 100dvh) - var(--nav-h)); background:#000;"></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      小提示：祝大家游戏愉快。
+    </footer>
+
+    <div class="bottom-nav" role="navigation" aria-label="底部导航">
+      <div class="nav-item active" data-view="home">首页</div>
+      <div class="nav-item" data-view="chat">聊天室</div>
+      <div class="nav-item" data-view="history">历史</div>
+      <div class="nav-item" id="nav-refresh" data-action="refresh" style="display:none">刷新缓存</div>
+    </div>
+    
+    <script>
+      // 轻量交互：根据鼠标位置增强霓虹效果
+      (function(){
+        const root = document.documentElement;
+        window.addEventListener('mousemove', (e) => {
+          const x = e.clientX / window.innerWidth;
+          const y = e.clientY / window.innerHeight;
+          root.style.setProperty('--neon-1', `hsl(${200 + x * 40}, 100%, 60%)`);
+          root.style.setProperty('--neon-2', `hsl(${320 - y * 40}, 100%, 60%)`);
+        });
+      })();
+
+      window.Played = (() => {
+        function get(){
+          try { const r = localStorage.getItem('played_history'); return r ? JSON.parse(r) : []; } catch(e) { return []; }
+        }
+        function save(list){
+          try { localStorage.setItem('played_history', JSON.stringify(list)); } catch(e) {}
+        }
+        function clear(){
+          try { localStorage.removeItem('played_history'); } catch(e) {}
+        }
+        function push(item){
+          let list = get();
+          const rec = { name: item.name||'', path: item.path||'', category: item.category||'', preview: item.preview||'', hint: item.hint||'', time: Date.now() };
+          const i = list.findIndex(x => x.path === rec.path);
+          if (i >= 0) list[i] = rec; else list.unshift(rec);
+          if (list.length > 100) list = list.slice(0,100);
+          save(list);
+        }
+        return { get, push, clear };
+      })();
+
+      const History = (() => {
+        const grid = document.getElementById('history-grid');
+        const clearBtn = document.getElementById('history-clear-btn');
+        function render(){
+          if (!grid) return;
+          grid.setAttribute('aria-busy','true');
+          grid.innerHTML = '';
+          const frag = document.createDocumentFragment();
+          const list = (window.Played && window.Played.get()) || [];
+          // 按游玩时间倒序排序
+          list.sort((a, b) => (b.time || 0) - (a.time || 0));
+          if (!list.length) {
+            const empty = document.createElement('div');
+            empty.className = 'hint';
+            empty.style.padding = '12px 16px';
+            empty.textContent = '暂无历史记录';
+            grid.appendChild(empty);
+            grid.setAttribute('aria-busy','false');
+            return;
+          }
+          list.forEach(g => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const preview = document.createElement('div');
+            preview.className = 'card-preview';
+            const gradient = 'linear-gradient(135deg, rgba(0,224,255,.12), rgba(255,0,170,.12))';
+            const bg = (g.preview && String(g.preview).trim()) ? `url('${g.preview}?v=${Date.now()}'), ${gradient}` : gradient;
+            preview.style.backgroundImage = bg;
+            preview.style.backgroundSize = 'cover, cover';
+            preview.style.backgroundPosition = 'center, center';
+            preview.style.backgroundRepeat = 'no-repeat';
+            const info = document.createElement('div');
+            info.className = 'card-info';
+            const left = document.createElement('div');
+            const name = document.createElement('div'); name.className = 'name'; name.textContent = g.name || '未命名';
+            const hint = document.createElement('div'); hint.className = 'hint'; hint.textContent = g.hint || '';
+            const timeChip = document.createElement('div'); timeChip.className = 'tag'; timeChip.textContent = '最近: ' + new Date(g.time || Date.now()).toLocaleString();
+            left.appendChild(name); left.appendChild(hint);
+            left.appendChild(timeChip);
+            const btn = document.createElement('a');
+            btn.className = 'play-btn'; btn.href = '#'; btn.textContent = '继续游戏';
+            btn.setAttribute('data-game', (g.path || '').replace(/^game\//, ''));
+            btn.setAttribute('data-name', g.name || '');
+            btn.setAttribute('data-category', g.category || '');
+            btn.setAttribute('data-preview', (g.preview || '').replace(/^game\//, ''));
+            btn.setAttribute('data-hint', g.hint || '');
+            btn.setAttribute('data-orientation', g.orientation || '0');
+            info.appendChild(left); info.appendChild(btn);
+            card.appendChild(preview); card.appendChild(info);
+            frag.appendChild(card);
+          });
+          grid.appendChild(frag);
+          grid.setAttribute('aria-busy','false');
+        }
+        if (clearBtn) {
+          clearBtn.addEventListener('click', () => {
+            if (!window.Played) return;
+            const ok = window.confirm ? window.confirm('确定清除历史记录？') : true;
+            if (!ok) return;
+            window.Played.clear();
+            render();
+          });
+        }
+        return { render };
+      })();
+
+      // 动态视口高度适配：在移动端键盘弹出时保持聊天/游戏视图可见
+      (function(){
+        const setVvh = () => {
+          const v = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+          document.documentElement.style.setProperty('--vvh', v + 'px');
+        };
+        setVvh();
+        window.addEventListener('resize', setVvh);
+        if (window.visualViewport) {
+          window.visualViewport.addEventListener('resize', setVvh);
+        }
+      })();
+
+      // 简易聊天室前端逻辑
+      const Chat = (() => {
+        const apiBase = 'chat/api.php';
+        let lastId = 0;
+        let pollingTimer = null;
+
+        const els = {
+          messages: document.getElementById('chat-messages'),
+          username: document.getElementById('chat-username'),
+          content: document.getElementById('chat-content'),
+          sendBtn: document.getElementById('chat-send'),
+        };
+
+        // 初始化昵称
+        (function initName(){
+          const saved = localStorage.getItem('chat_username');
+          if (saved) {
+            els.username.value = saved;
+          } else {
+            const rand = Math.floor(Math.random() * 900 + 100);
+            els.username.value = `游客${rand}`;
+          }
+        })();
+
+        // 渲染消息
+        function render(messages) {
+          const frag = document.createDocumentFragment();
+          messages.forEach(m => {
+            const item = document.createElement('div');
+            item.className = 'msg';
+            const timeStr = new Date(m.created_at * 1000).toLocaleString();
+            item.innerHTML = `<div class="meta">${escapeHtml(m.username || '匿名')} • ${timeStr}</div><div class="content">${escapeHtml(m.content || '')}</div>`;
+            frag.appendChild(item);
+          });
+          els.messages.appendChild(frag);
+          // 滚动到底部
+          els.messages.scrollTop = els.messages.scrollHeight;
+        }
+
+        function escapeHtml(str){
+          return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        }
+
+        async function list() {
+          try {
+            const r = await fetch(`${apiBase}?action=list&since_id=${lastId}`);
+            const data = await r.json();
+            if (data && data.ok && Array.isArray(data.messages)) {
+              if (data.messages.length) {
+                lastId = data.messages[data.messages.length - 1].id;
+                render(data.messages);
+              }
+            }
+          } catch (err) {
+            console.warn('拉取消息失败', err);
+          }
+        }
+
+        async function send() {
+          const username = (els.username.value || '').trim().slice(0, 32);
+          const content = (els.content.value || '').trim().slice(0, 500);
+          if (!content) return;
+          try {
+            const r = await fetch(`${apiBase}?action=send`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ username, content })
+            });
+            const data = await r.json();
+            if (data && data.ok) {
+              // 保存昵称
+              if (username) localStorage.setItem('chat_username', username);
+              els.content.value = '';
+              // 立即刷新一次
+              await list();
+            }
+          } catch (err) {
+            console.warn('发送失败', err);
+          }
+        }
+
+        function pollStart() {
+          if (pollingTimer) return;
+          // 进入聊天室时先加载当前消息
+          list();
+          pollingTimer = setInterval(list, 3000);
+        }
+        function pollStop() {
+          if (pollingTimer) { clearInterval(pollingTimer); pollingTimer = null; }
+        }
+
+        // 事件绑定
+        els.sendBtn.addEventListener('click', send);
+        els.content.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') { e.preventDefault(); send(); }
+        });
+
+        // 移动端输入框聚焦时，自动滚动到最新消息，避免被键盘遮挡
+        els.content.addEventListener('focus', () => {
+          setTimeout(() => { els.messages.scrollTop = els.messages.scrollHeight; }, 100);
+        });
+
+        return { pollStart, pollStop };
+      })();
+
+      // 视图切换逻辑：底部导航栏（在 Chat 初始化之后）
+      (function(){
+        const navHome = document.querySelector('.nav-item[data-view="home"]');
+        const navChat = document.querySelector('.nav-item[data-view="chat"]');
+        const navHistory = document.querySelector('.nav-item[data-view="history"]');
+        const navRefresh = document.getElementById('nav-refresh');
+        const homeView = document.getElementById('home-view');
+        const chatView = document.getElementById('chat-view');
+        const historyView = document.getElementById('history-view');
+        const gameView = document.getElementById('game-view');
+        const gameFrame = document.getElementById('game-frame');
+        let currentView = 'home';
+
+        function updateNavLabels() {
+          const gameLoaded = document.body.classList.contains('game-active');
+          // 在游戏视图，首页按钮显示为“退出游戏”；
+          // 不在游戏视图但已加载游戏时，显示“返回游戏”；
+          // 其他情况显示“首页”。
+          if (currentView === 'game') {
+            navHome.textContent = '退出游戏';
+          } else if (gameLoaded) {
+            navHome.textContent = '返回游戏';
+          } else {
+            navHome.textContent = '首页';
+          }
+        }
+
+        function activate(view) {
+          currentView = view;
+          // 切换按钮状态
+          [navHome, navChat, navHistory].forEach(n => n.classList.remove('active'));
+          if (view === 'home') navHome.classList.add('active');
+          if (view === 'chat') navChat.classList.add('active');
+          if (view === 'history') navHistory.classList.add('active');
+          if (view === 'game') navHome.classList.add('active');
+          // 刷新缓存按钮仅在游戏视图显示
+          if (navRefresh) navRefresh.style.display = (view === 'game') ? '' : 'none';
+          if (navHistory) navHistory.style.display = (view === 'game') ? 'none' : '';
+
+          // 切换视图
+          homeView.classList.remove('active');
+          chatView.classList.remove('active');
+          historyView.classList.remove('active');
+          gameView.classList.remove('active');
+          if (view === 'home') homeView.classList.add('active');
+          if (view === 'chat') chatView.classList.add('active');
+          if (view === 'history') { historyView.classList.add('active'); History.render(); }
+          if (view === 'game') gameView.classList.add('active');
+
+          // 当进入聊天室时，启动轮询；离开时暂停
+          if (view === 'chat') Chat.pollStart(); else Chat.pollStop();
+
+          // 更新底部导航文案
+          updateNavLabels();
+        }
+
+        // 初始不绑定简单跳转，统一使用下方的智能逻辑（支持退出游戏/返回游戏）
+
+        // 默认首页
+        activate('home');
+
+        // 进入游戏：使用事件委托，支持动态渲染的卡片
+        const gameGrid = document.getElementById('game-grid');
+        const historyGrid = document.getElementById('history-grid');
+        if (gameGrid) {
+          gameGrid.addEventListener('click', (e) => {
+            const btn = e.target.closest('.play-btn[data-game]');
+            if (!btn) return;
+            e.preventDefault();
+            const path = btn.getAttribute('data-game');
+            if (!path) return;
+            const gameName = btn.getAttribute('data-name');
+            const gameCategory = btn.getAttribute('data-category');
+            const gamePreview = btn.getAttribute('data-preview');
+            const gameHint = btn.getAttribute('data-hint');
+            const gameOrientation = btn.getAttribute('data-orientation') || '0';
+            
+            window.Played && window.Played.push({ name: gameName, path, category: gameCategory, preview: gamePreview, hint: gameHint, orientation: gameOrientation });
+            document.body.classList.add('game-active');
+            
+            // 根据游戏方向设置iframe样式和屏幕方向
+            if (gameFrame) {
+              if (gameOrientation === '1') {
+                // 横屏游戏：设置样式并锁定屏幕方向
+                gameFrame.style.maxWidth = '100%';
+                gameFrame.style.width = '100%';
+                gameFrame.style.height = 'calc(var(--vvh, 100dvh) - var(--nav-h))';
+                
+                // 调用屏幕方向API强制横屏
+                if (screen.orientation && screen.orientation.lock) {
+                  screen.orientation.lock('landscape').catch(err => {
+                    console.warn('无法锁定屏幕方向:', err);
+                  });
+                } else if (screen.lockOrientation) {
+                  screen.lockOrientation('landscape');
+                }
+              } else {
+                // 竖屏游戏：设置样式并解锁屏幕方向
+                gameFrame.style.maxWidth = '420px';
+                gameFrame.style.width = '100%';
+                gameFrame.style.height = 'calc(var(--vvh, 100dvh) - var(--nav-h))';
+                
+                // 解锁屏幕方向
+                if (screen.orientation && screen.orientation.unlock) {
+                  screen.orientation.unlock();
+                } else if (screen.unlockOrientation) {
+                  screen.unlockOrientation();
+                }
+              }
+            }
+            
+            const bust = `${path}${path.includes('?') ? '&' : '?'}mobile=1&v=${Date.now()}`;
+            // 总是重新加载游戏以确保路径修改生效
+            gameFrame.src = bust;
+            activate('game');
+          });
+        }
+        if (historyGrid) {
+          historyGrid.addEventListener('click', (e) => {
+            const btn = e.target.closest('.play-btn[data-game]');
+            if (!btn) return;
+            e.preventDefault();
+            const path = btn.getAttribute('data-game');
+            if (!path) return;
+            const gameName = btn.getAttribute('data-name');
+            const gameCategory = btn.getAttribute('data-category');
+            const gamePreview = btn.getAttribute('data-preview');
+            const gameHint = btn.getAttribute('data-hint');
+            const gameOrientation = btn.getAttribute('data-orientation') || '0';
+            
+            window.Played && window.Played.push({ name: gameName, path, category: gameCategory, preview: gamePreview, hint: gameHint, orientation: gameOrientation });
+            document.body.classList.add('game-active');
+            
+            // 根据游戏方向设置iframe样式和屏幕方向
+            if (gameFrame) {
+              if (gameOrientation === '1') {
+                // 横屏游戏：设置样式并锁定屏幕方向
+                gameFrame.style.maxWidth = '100%';
+                gameFrame.style.width = '100%';
+                gameFrame.style.height = 'calc(var(--vvh, 100dvh) - var(--nav-h))';
+                
+                // 调用屏幕方向API强制横屏
+                if (screen.orientation && screen.orientation.lock) {
+                  screen.orientation.lock('landscape').catch(err => {
+                    console.warn('无法锁定屏幕方向:', err);
+                  });
+                } else if (screen.lockOrientation) {
+                  screen.lockOrientation('landscape');
+                }
+              } else {
+                // 竖屏游戏：设置样式并解锁屏幕方向
+                gameFrame.style.maxWidth = '420px';
+                gameFrame.style.width = '100%';
+                gameFrame.style.height = 'calc(var(--vvh, 100dvh) - var(--nav-h))';
+                
+                // 解锁屏幕方向
+                if (screen.orientation && screen.orientation.unlock) {
+                  screen.orientation.unlock();
+                } else if (screen.unlockOrientation) {
+                  screen.unlockOrientation();
+                }
+              }
+            }
+            
+            const bust = `${path}${path.includes('?') ? '&' : '?'}mobile=1&v=${Date.now()}`;
+            // 总是重新加载游戏以确保路径修改生效
+            gameFrame.src = bust;
+            activate('game');
+          });
+        }
+      
+        // 首页按钮：根据是否已加载游戏动态前往首页或返回游戏
+        navHome.addEventListener('click', (e) => {
+          const gameLoaded = document.body.classList.contains('game-active');
+          if (currentView === 'game') {
+            // 退出游戏：卸载 iframe、解锁屏幕方向并返回首页
+            if (gameFrame) gameFrame.src = '';
+            document.body.classList.remove('game-active');
+            
+            // 解锁屏幕方向
+            if (screen.orientation && screen.orientation.unlock) {
+              screen.orientation.unlock();
+            } else if (screen.unlockOrientation) {
+              screen.unlockOrientation();
+            }
+            
+            activate('home');
+            return;
+          }
+          if (gameLoaded && currentView !== 'game') {
+            // 已加载游戏但当前不在游戏视图：返回游戏
+            activate('game');
+          } else {
+            // 未加载游戏或已在首页：保持/返回首页
+            activate('home');
+          }
+        });
+
+        // 聊天按钮照常切换到聊天室（不卸载游戏）
+        navChat.addEventListener('click', () => activate('chat'));
+        if (navHistory) navHistory.addEventListener('click', () => activate('history'));
+
+        // 刷新缓存：重新加载当前 iframe，附加新的时间戳避免缓存
+        if (navRefresh) {
+          navRefresh.addEventListener('click', () => {
+            const src = gameFrame && gameFrame.src ? gameFrame.src : '';
+            if (!src) return;
+            const base = src.split('?')[0];
+            const bust = `${base}?mobile=1&v=${Date.now()}`;
+            gameFrame.src = bust;
+            activate('game');
+          });
+        }
+      })();
+    </script>
+    <style>
+      #home-view { overscroll-behavior-y: contain; }
+      .pull-refresh { position: fixed; top: 0; left: 0; right: 0; height: 0; display: flex; align-items: center; justify-content: center; gap: 8px; z-index: 20; background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)); color: var(--text); overflow: hidden; backdrop-filter: blur(6px); }
+      .pull-refresh .pr-icon { width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(255,255,255,.4); border-top-color: transparent; }
+      .pull-refresh .pr-icon.spin { animation: prspin .8s linear infinite; }
+      @keyframes prspin { to { transform: rotate(360deg); } }
+      .history-actions { display:flex; justify-content:flex-end; padding: 0 16px; }
+      .text-btn { background: none; border: 0; color: var(--muted); cursor: pointer; text-decoration: underline; font-size: 14px; padding: 10px 0; }
+      .text-btn:hover { color: var(--text); }
+      .nav-item::before { content: ""; display:inline-block; margin-right:6px; font-size: 16px; }
+      .nav-item[data-view="home"]::before { content: "🏠"; }
+      .nav-item[data-view="chat"]::before { content: "💬"; }
+      .nav-item[data-view="history"]::before { content: "🕘"; }
+      #nav-refresh::before { content: "↻"; }
+      .tag { display:inline-block; padding:2px 8px; border-radius:12px; background: rgba(255,255,255,0.08); color:#ddd; font-size:12px; border:1px solid rgba(255,255,255,0.12); }
+      @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+      .skeleton .card { pointer-events:none; }
+      .skeleton .card-preview { background: linear-gradient(90deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.06) 100%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+      .skeleton .name, .skeleton .hint { background: linear-gradient(90deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.06) 100%); color: transparent; border-radius: 6px; min-height: 14px; }
+    </style>
+  
+    <style>
+      /* 分类筛选条 */
+      .category-bar { display:flex; gap:8px; flex-wrap:wrap; margin: 12px 16px; overflow-x:auto; -webkit-overflow-scrolling: touch; justify-content: center;}
+      .category-bar .cat-btn { padding:6px 10px; border-radius: 16px; background: rgba(255,255,255,0.08); color:#ddd; font-size: 14px; cursor:pointer; border: 1px solid rgba(255,255,255,0.12); }
+      .category-bar .cat-btn.active { background: #4cd2b5; color: #000; border-color: #4cd2b5; }
+      #home-view .grid .card.hidden { display: none !important; }
+      @media (max-width: 600px) { .category-bar { margin: 8px 12px; } .category-bar .cat-btn { font-size: 13px; } }
+    </style>
+
+    <script>
+      // 动态加载并渲染游戏列表（来自根目录 games.json）
+      (function(){
+        const grid = document.getElementById('game-grid');
+        const bar = document.getElementById('category-bar');
+        const state = { games: [], category: '全部' };
+        function showSkeleton(count){
+          if (!grid) return;
+          grid.classList.add('skeleton');
+          grid.innerHTML = '';
+          const frag = document.createDocumentFragment();
+          for (let i = 0; i < (count || 6); i++) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const preview = document.createElement('div'); preview.className = 'card-preview';
+            const info = document.createElement('div'); info.className = 'card-info';
+            const left = document.createElement('div');
+            const name = document.createElement('div'); name.className = 'name'; name.textContent = ' ';
+            const hint = document.createElement('div'); hint.className = 'hint'; hint.textContent = ' ';
+            left.appendChild(name); left.appendChild(hint);
+            const btn = document.createElement('a'); btn.className = 'play-btn'; btn.href = '#'; btn.textContent = '加载中';
+            info.appendChild(left); info.appendChild(btn);
+            card.appendChild(preview); card.appendChild(info);
+            frag.appendChild(card);
+          }
+          grid.appendChild(frag);
+        }
+
+        function renderCards() {
+          if (!grid) return;
+          grid.setAttribute('aria-busy', 'true');
+          grid.classList.remove('skeleton');
+          grid.innerHTML = '';
+          const frag = document.createDocumentFragment();
+          const list = state.games.filter(g => state.category === '全部' || g.category === state.category);
+          list.forEach(g => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.setAttribute('data-category', g.category || '');
+
+            const preview = document.createElement('div');
+            preview.className = 'card-preview';
+            const gradient = 'linear-gradient(135deg, rgba(0,224,255,.12), rgba(255,0,170,.12))';
+            const bg = (g.preview && String(g.preview).trim()) ? `url('${g.preview}?v=${Date.now()}'), ${gradient}` : gradient;
+            preview.style.backgroundImage = bg;
+            preview.style.backgroundSize = 'cover, cover';
+            preview.style.backgroundPosition = 'center, center';
+            preview.style.backgroundRepeat = 'no-repeat';
+            
+            // 为 sort 值为 999 的游戏添加 hot 标签
+          if (g.sort === 999) {
+            const hotTag = document.createElement('div');
+            hotTag.className = 'hot-tag';
+            hotTag.textContent = 'hot';
+            preview.appendChild(hotTag);
+          }
+          // 为 sort 值为 998 的游戏添加 new 标签
+          if (g.sort === 998) {
+            const newTag = document.createElement('div');
+            newTag.className = 'new-tag';
+            newTag.textContent = 'new';
+            preview.appendChild(newTag);
+          }
+
+            const info = document.createElement('div');
+            info.className = 'card-info';
+            const left = document.createElement('div');
+            const name = document.createElement('div'); name.className = 'name'; name.textContent = g.name || '未命名';
+            const hint = document.createElement('div'); hint.className = 'hint'; hint.textContent = g.hint || '';
+            left.appendChild(name); left.appendChild(hint);
+
+            const btn = document.createElement('a');
+            btn.className = 'play-btn'; btn.href = '#'; btn.textContent = '进入游戏';
+            btn.setAttribute('data-game', (g.path || ''));
+            btn.setAttribute('data-name', g.name || '');
+            btn.setAttribute('data-category', g.category || '');
+            btn.setAttribute('data-preview', (g.preview || ''));
+            btn.setAttribute('data-hint', g.hint || '');
+            btn.setAttribute('data-orientation', g.orientation || '0');
+
+            info.appendChild(left); info.appendChild(btn);
+            card.appendChild(preview); card.appendChild(info);
+            frag.appendChild(card);
+          });
+          grid.appendChild(frag);
+          grid.setAttribute('aria-busy', 'false');
+        }
+
+        function buildCategories() {
+          if (!bar) return;
+          const cats = Array.from(new Set(state.games.map(g => g.category).filter(Boolean))).sort();
+          const currentActive = bar.querySelector('.cat-btn.active');
+          const currentCategory = currentActive ? currentActive.dataset.cat : '全部';
+          
+          // 缓存现有的分类按钮，避免重新创建
+          const existingBtns = new Map();
+          bar.querySelectorAll('.cat-btn').forEach(btn => {
+            existingBtns.set(btn.dataset.cat, btn);
+          });
+          
+          bar.innerHTML = '';
+          const makeBtn = (label) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'cat-btn';
+            btn.textContent = label;
+            btn.dataset.cat = label;
+            btn.addEventListener('click', () => {
+              state.category = label;
+              bar.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === label));
+              renderCards();
+            });
+            return btn;
+          };
+          
+          const allBtn = makeBtn('全部');
+          if (currentCategory === '全部') allBtn.classList.add('active');
+          bar.appendChild(allBtn);
+          
+          cats.forEach(cat => {
+            const btn = makeBtn(cat);
+            if (currentCategory === cat) btn.classList.add('active');
+            bar.appendChild(btn);
+          });
+          
+          // 保持当前选中状态
+          if (currentCategory !== '全部' && !cats.includes(currentCategory)) {
+            // 如果当前选中的分类在新数据中不存在，则重置为"全部"
+            allBtn.classList.add('active');
+            state.category = '全部';
+            renderCards();
+          }
+        }
+
+        async function loadGames() {
+          try {
+            showSkeleton(6);
+            const r = await fetch('games.json?v=' + Date.now());
+            const data = await r.json();
+            if (Array.isArray(data)) {
+              // 更新标题显示游戏数量
+              const subtitle = document.querySelector('.subtitle');
+              if (subtitle) {
+                subtitle.textContent = `当前共计${data.length}款游戏，点击进入即可开始冒险`;
+              }
+              // 按sort字段降序排序，sort相同时按id升序排序
+              state.games = data.sort((a, b) => {
+                // 优先按sort字段降序排序（sort值越大越靠前）
+                const sortDiff = (b.sort || 0) - (a.sort || 0);
+                if (sortDiff !== 0) {
+                  return sortDiff;
+                }
+                // sort相同时，按id数字值升序排序
+                const numA = parseInt(a.id, 10);
+                const numB = parseInt(b.id, 10);
+                return numA - numB;
+              });
+              buildCategories();
+              renderCards();
+            }
+          } catch (err) {
+            console.warn('加载游戏列表失败', err);
+          }
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', loadGames);
+        } else {
+          loadGames();
+        }
+        window.Home = { refresh: loadGames };
+      })();
+    </script>
+    <script>
+      (function(){
+        if (!('ontouchstart' in window) && !(navigator.maxTouchPoints > 0)) return;
+        const pr = document.getElementById('pull-refresh');
+        const homeView = document.getElementById('home-view');
+        let startY = 0, pulling = false, dist = 0, threshold = 70, maxPull = 120, refreshing = false;
+        const icon = pr ? pr.querySelector('.pr-icon') : null;
+        const label = pr ? pr.querySelector('.pr-label') : null;
+        const setHeight = (h) => { if (pr) pr.style.height = h + 'px'; };
+        const setLabel = (t) => { if (label) label.textContent = t; };
+        const atTop = () => (document.scrollingElement ? document.scrollingElement.scrollTop : window.scrollY) <= 0;
+        const activeHome = () => homeView && homeView.classList.contains('active');
+        function reset() { dist = 0; pulling = false; setHeight(0); setLabel('下拉刷新'); if (icon) icon.classList.remove('spin'); }
+        function trigger() {
+          if (refreshing) return;
+          refreshing = true;
+          setLabel('刷新中…');
+          if (icon) icon.classList.add('spin');
+          const p = window.Home && typeof window.Home.refresh === 'function' ? window.Home.refresh() : Promise.resolve();
+          Promise.resolve(p).finally(() => { refreshing = false; reset(); });
+        }
+        const onStart = (e) => {
+          if (!activeHome() || !atTop() || refreshing) return;
+          const t = e.touches ? e.touches[0] : e;
+          startY = t.clientY;
+          pulling = true;
+          dist = 0;
+          setHeight(0);
+        };
+        const onMove = (e) => {
+          if (!pulling) return;
+          const t = e.touches ? e.touches[0] : e;
+          const y = t.clientY;
+          const d = y - startY;
+          if (d <= 0) { reset(); return; }
+          dist = Math.min(maxPull, d * 0.6);
+          setHeight(dist);
+          setLabel(dist >= threshold ? '松开刷新' : '下拉刷新');
+          if (e.cancelable) e.preventDefault();
+        };
+        const onEnd = () => {
+          if (!pulling) return;
+          if (dist >= threshold) { setHeight(60); trigger(); } else { reset(); }
+        };
+        document.addEventListener('touchstart', onStart, { passive: true });
+        document.addEventListener('touchmove', onMove, { passive: false });
+        document.addEventListener('touchend', onEnd, { passive: true });
+        document.addEventListener('touchcancel', onEnd, { passive: true });
+      })();
+    </script>
+</body></html>

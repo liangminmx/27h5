@@ -43,5 +43,4 @@ docker-compose.yml
 .env.local
 
 # Game directory (use game.tar.gz instead)
-game/
 game.tar.gz

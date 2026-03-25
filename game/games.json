@@ -1,0 +1,272 @@
+[
+    {
+        "id": "01",
+        "sort": 0,
+        "name": "末日特工队",
+        "hint": "末日生存 / 特工炫战",
+        "category": "动作射击",
+        "path": "01/",
+        "preview": "moren01.png",
+        "orientation": 0
+    },
+    {
+        "id": "02",
+        "sort": 0,
+        "name": "激战突围",
+        "hint": "热血突围 / 激战到底",
+        "category": "动作射击",
+        "path": "02/",
+        "preview": "moren02.png",
+        "orientation": 0
+    },
+    {
+        "id": "03",
+        "sort": 0,
+        "name": "王大爷的幸福生活",
+        "hint": "田园养老 / 治愈慢生活",
+        "category": "模拟经营",
+        "path": "03/",
+        "preview": "moren03.png",
+        "orientation": 0
+    },
+    {
+        "id": "04",
+        "sort": 0,
+        "name": "挣他一个亿",
+        "hint": "商战模拟 / 亿级帝国养成",
+        "category": "策略对战",
+        "path": "04/",
+        "preview": "moren04.png",
+        "orientation": 0
+    },
+    {
+        "id": "05",
+        "sort": 0,
+        "name": "传奇之旅",
+        "hint": "魔幻冒险 / 史诗传奇",
+        "category": "修仙冒险",
+        "path": "05/",
+        "preview": "moren05.png",
+        "orientation": 0
+    },
+    {
+        "id": "06",
+        "sort": 11,
+        "name": "逍遥修仙传",
+        "hint": "挂机修仙 / 逍遥渡劫",
+        "category": "修仙冒险",
+        "path": "06/",
+        "preview": "moren06.png",
+        "orientation": 0
+    },
+    {
+        "id": "07",
+        "sort": 12,
+        "name": "肥啾瘦身馆",
+        "hint": "萌鸟养成 / 合成经营",
+        "category": "模拟经营",
+        "path": "07/",
+        "preview": "moren07.jpg",
+        "orientation": 0
+    },
+    {
+        "id": "08",
+        "sort": 13,
+        "name": "出发吧卡皮巴拉",
+        "hint": "萌物闯关 / 奇趣冒险",
+        "category": "修仙冒险",
+        "path": "08/",
+        "preview": "moren08.png",
+        "orientation": 0
+    },
+    {
+        "id": "09",
+        "sort": 14,
+        "name": "猛鬼太空杀",
+        "hint": "太空诡影 / 猛鬼猎杀",
+        "category": "动作射击",
+        "path": "09/",
+        "preview": "moren09.png",
+        "orientation": 0
+    },
+    {
+        "id": "10",
+        "sort": 0,
+        "name": "抓小猪",
+        "hint": "萌猪消除 / 趣味闯关",
+        "category": "休闲益智",
+        "path": "10/",
+        "preview": "moren10.png",
+        "orientation": 0
+    },
+    {
+        "id": "11",
+        "sort": 999,
+        "name": "梦想遇见童话",
+        "hint": "童话小镇 / 模拟经营圆梦",
+        "category": "模拟经营",
+        "path": "11/",
+        "preview": "moren11.png",
+        "orientation": 0
+    },
+    {
+        "id": "12",
+        "sort": 16,
+        "name": "修真模拟器",
+        "hint": "挂机修真 / 模拟渡劫飞升",
+        "category": "修仙冒险",
+        "path": "12/",
+        "preview": "moren12.png",
+        "orientation": 0
+    },
+    {
+        "id": "13",
+        "sort": 0,
+        "name": "喵大人物语",
+        "hint": "萌喵小镇 / 经营筑梦",
+        "category": "模拟经营",
+        "path": "13/",
+        "preview": "moren13.png",
+        "orientation": 0
+    },
+    {
+        "id": "15",
+        "sort": 0,
+        "name": "乞丐逆袭当帝王",
+        "hint": "乞丐逆袭 / 帝王养成开挂",
+        "category": "策略对战",
+        "path": "15/",
+        "preview": "moren15.png",
+        "orientation": 0
+    },
+    {
+        "id": "16",
+        "sort": 0,
+        "name": "悟空修仙",
+        "hint": "挂机修真 / 模拟渡劫飞升",
+        "category": "修仙冒险",
+        "path": "16/",
+        "preview": "moren16.png",
+        "orientation": 0
+    },
+    {
+        "id": "17",
+        "sort": 0,
+        "name": "放置大老板",
+        "hint": "商战模拟 / 模拟经营圆梦",
+        "category": "模拟经营",
+        "path": "17/",
+        "preview": "moren17.png",
+        "orientation": 0
+    },
+    {
+        "id": "18",
+        "sort": 0,
+        "name": "斗魂大陆",
+        "hint": "斗魂养成 / 休闲割草",
+        "category": "休闲割草",
+        "path": "18/",
+        "preview": "moren18.png",
+        "orientation": 0
+    },
+    {
+        "id": "19",
+        "sort": 0,
+        "name": "向猛鬼开炮",
+        "hint": "休闲放置 / 角色养成",
+        "category": "休闲割草",
+        "path": "19/",
+        "preview": "moren19.png",
+        "orientation": 0
+    },
+    {
+        "id": "20",
+        "sort": 0,
+        "name": "纸上当大侠",
+        "hint": "挂机修炼 / 角色养成",
+        "category": "休闲割草",
+        "path": "20/",
+        "preview": "moren20.png",
+        "orientation": 0
+    },
+    {
+        "id": "21",
+        "sort": 0,
+        "name": "拿下一座城",
+        "hint": " 建造城池/ 守卫城堡",
+        "category": "策略对战",
+        "path": "21/",
+        "preview": "moren21.png",
+        "orientation": 0
+    },
+    {
+        "id": "22",
+        "sort": 0,
+        "name": "打了个龙",
+        "hint": " 击败恶龙/ 角色养成",
+        "category": "动作射击",
+        "path": "22/",
+        "preview": "moren22.png",
+        "orientation": 0
+    },
+    {
+        "id": "23",
+        "sort": 0,
+        "name": "砍不过我呀",
+        "hint": " 武器合成/ 击败来敌",
+        "category": "策略对战",
+        "path": "23/",
+        "preview": "moren23.png",
+        "orientation": 0
+    },
+    {
+        "id": "24",
+        "sort": 0,
+        "name": "勇士征程",
+        "hint": " 地下城与勇士/ 女鬼剑",
+        "category": "动作闯关",
+        "path": "24/",
+        "preview": "moren24.png",
+        "orientation": 0
+    },
+    {
+        "id": "25",
+        "sort": 0,
+        "name": "阿拉德勇者",
+        "hint": " 地下城与勇士/ 鬼剑",
+        "category": "动作闯关",
+        "path": "25/",
+        "preview": "moren25.png",
+        "orientation": 0
+    },
+    {
+        "id": "26",
+        "sort": 0,
+        "name": "特工大战僵怪",
+        "hint": " 休闲割草/ 角色养成",
+        "category": "休闲割草",
+        "path": "26/",
+        "preview": "moren26.png",
+        "orientation": 0
+    },
+    {
+        "id": "27",
+        "sort": 0,
+        "name": "勇者决斗",
+        "hint": "决斗开始 / 勇者出行",
+        "category": "策略对战",
+        "path": "27/",
+        "preview": "moren27.png",
+        "orientation": 0
+    },
+    {
+        "id": "28",
+        "sort": 0,
+        "name": "飞刀大乱斗",
+        "hint": "决斗开始 / 勇者出行",
+        "category": "策略对战",
+        "path": "28/",
+        "preview": "moren28.png",
+        "orientation": 0
+    }
+]
