@@ -22,13 +22,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download game files from release
-        if: github.event_name == 'workflow_dispatch'
+      - name: Ensure game directory exists
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
-          if [ -f "game.zip" ]; then
-            echo "Using local game.zip"
+          if [ -d "game" ]; then
+            echo "game directory exists"
           else
-            echo "No local game.zip found, game directory will be empty"
+            echo "game directory not found, attempting to download from latest release"
+            curl -sL https://github.com/${{ github.repository }}/releases/download/latest/game.zip -o game.zip || {
+              echo "Failed to download game.zip. Please create a release with game.zip attached."
+              exit 1
+            }
+            unzip -q game.zip -d .
+            mv game/www/wwwroot/game/* game/ 2>/dev/null || true
+            rm -rf game/www
+            rm -f game.zip
           fi
 
       - name: Download game files from latest release

@@ -1,13 +1,9 @@
 services:
   h5game:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/liangminmx/27h5:latest
     container_name: h5game
     restart: always
     ports:
       - "8080:80"
-    volumes:
-      - ./game:/var/www/html
     environment:
       - TZ=Asia/Shanghai

@@ -2,6 +2,7 @@
 *.zip
 *.tar
 *.tar.gz
+game/
 
 # IDE
 .idea/

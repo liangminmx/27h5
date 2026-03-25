@@ -1,0 +1,47 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Archives
+*.zip
+
+# Binary files (images, etc.)
+# *.png
+# *.jpg
+# *.jpeg
+# *.gif
+# *.ico
+# *.pdf
+# *.mp4
+# *.mp3
+# *.wav
+
+# Build artifacts
+node_modules/
+dist/
+build/
+*.pyc
+__pycache__/
+
+# Docker
+docker-compose.yml
+.dockerignore
+
+# Configuration files (optional)
+.env
+.env.local
+
+# Game directory (use game.tar.gz instead)
+game/
+game.tar.gz
